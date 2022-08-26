@@ -1,5 +1,6 @@
 <template>
   <div>
+
     <el-form >
       <el-form-item label="年龄" prop="age">
         <el-input v-model="query.age" type="text" autocomplete="off" />
@@ -60,11 +61,12 @@
 </template>
 
 <script setup >
-import {reactive, ref} from "vue";
+import {defineAsyncComponent, reactive, ref} from "vue";
 import {add, delById, getDataByKey, queryAllData, queryDataByIndex, updateByKey} from "@/sql";
-import {ElMessage, ElMessageBox} from "element-plus";
+import {ElMessage, ElMessageBox, ElButton, ElTable} from "element-plus";
 import {useRouter} from "vue-router/dist/vue-router";
 import {routerStack} from "@/stack";
+
   const title = ref('添加')
   const router = useRouter()
   const dialogFormVisible = ref(false)
