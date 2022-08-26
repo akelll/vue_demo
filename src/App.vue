@@ -9,6 +9,7 @@
 <script>
 import HelloWorld from './components/HelloWorld.vue'
 import {initDB} from "@/sql";
+import {routerStack} from "@/stack";
 
 export default {
   name: 'App',
@@ -22,6 +23,7 @@ export default {
   },
   created() {
     initDB()
+    routerStack.Init_stack()
   }
 }
 </script>

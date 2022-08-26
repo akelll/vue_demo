@@ -55,6 +55,7 @@
       </span>
       </template>
     </el-dialog>
+    <el-button @click="Func.gopage">go page</el-button>
   </div>
 </template>
 
@@ -62,7 +63,10 @@
 import {reactive, ref} from "vue";
 import {add, delById, getDataByKey, queryAllData, queryDataByIndex, updateByKey} from "@/sql";
 import {ElMessage, ElMessageBox} from "element-plus";
+import {useRouter} from "vue-router/dist/vue-router";
+import {routerStack} from "@/stack";
   const title = ref('添加')
+  const router = useRouter()
   const dialogFormVisible = ref(false)
   const ruleForm = ref({})
   const query = ref({age:null})
@@ -103,6 +107,9 @@ import {ElMessage, ElMessageBox} from "element-plus";
   },
    isOk:(msg)=>ElMessage({message: msg, type: 'success',}),
    query:()=>{
+     if (!query.value.age){
+       return
+     }
      queryDataByIndex('ageIndex',parseInt(query.value.age)).then(res =>{
        tableData.value = res
      })
@@ -110,6 +117,11 @@ import {ElMessage, ElMessageBox} from "element-plus";
    reset:()=>{
      query.value.age = null
      Func.getAll()
+   },
+   gopage:()=>{
+     // router.push()
+     // console.log(router)
+      routerStack.push('/page1',router)
    }
 })
    window.onload = Func.getAll
