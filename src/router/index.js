@@ -2,7 +2,7 @@
 import {createRouter, createWebHashHistory, createWebHistory} from 'vue-router'
 
 const routes = [
-    {path:'/index',component:import('@/components/HelloWorld.vue')}
+    {path:'/index',component:import('@/view/index.vue')}
 ]
 
 const router = createRouter({

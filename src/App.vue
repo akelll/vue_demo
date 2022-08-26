@@ -8,6 +8,7 @@
 
 <script>
 import HelloWorld from './components/HelloWorld.vue'
+import {initDB} from "@/sql";
 
 export default {
   name: 'App',
@@ -18,6 +19,9 @@ export default {
     return{
       d:{name:'张三',age:'18'}
     }
+  },
+  created() {
+    initDB()
   }
 }
 </script>
