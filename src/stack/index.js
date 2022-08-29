@@ -15,10 +15,12 @@ class Stack {
     Init_stack() {
         this.top = -1;
         const d = JSON.parse(sessionStorage.getItem(this.key))
+        console.log(d)
         if (d){
-            d.forEach((item)=>{
-                this.data.push(item)
-            })
+            for (let index = 0; index < d.length-1; index++) {
+                this.stack_push(d[index])
+            }
+        
         }else {
             sessionStorage.setItem(this.key, JSON.stringify([]))
         }

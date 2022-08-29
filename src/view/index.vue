@@ -57,6 +57,7 @@
       </template>
     </el-dialog>
     <el-button @click="Func.gopage">go page</el-button>
+  
   </div>
 </template>
 
@@ -66,7 +67,13 @@ import {add, delById, getDataByKey, queryAllData, queryDataByIndex, updateByKey}
 import {ElMessage, ElMessageBox, ElButton, ElTable} from "element-plus";
 import {useRouter} from "vue-router/dist/vue-router";
 import {routerStack} from "@/stack";
-
+  const filters = reactive({
+    capitalize:(value)=>{
+      if(!value) return '暂无数据'
+      value = '处理结果为:'+value
+    }
+  })
+  const test = ref('')
   const title = ref('添加')
   const router = useRouter()
   const dialogFormVisible = ref(false)

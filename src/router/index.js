@@ -3,6 +3,9 @@ import {createRouter, createWebHashHistory, createWebHistory} from 'vue-router'
 import {routerStack} from "@/stack";
 
 const routes = [
+    {path:'/',component:()=>import('@/view/home.vue')},
+    {path:'/echarts',component:()=>import('@/view/echart/index.vue')},
+    {path:'/css',component:()=>import('@/view/cssPage/index.vue')},
     {path:'/index',component:()=>import('@/view/index.vue')},
     {path:'/page1',component:()=>import('@/view/page/page1.vue')},
     {path:'/page2',component:()=>import('@/view/page/page2.vue')},
