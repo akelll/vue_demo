@@ -129,6 +129,10 @@
       </div>
     </div>
   </div>
+  <div class="test tt1"></div>
+  <div class="test tt2"></div>
+  <div class="test tt3"></div>
+  <div class="test tt4"></div>
 </div>
 </template>
 
@@ -393,7 +397,33 @@ const data =reactive({
 })
 
 </script>
-
+<style scoped>
+.tt4{
+  top: 1003px;
+  left: 1307px;
+}
+.tt3{
+  top: 113px;
+  left: 1679px;
+}
+.tt2{
+  top: 554px;
+  left: 1038px;
+}
+.tt1{
+  top: 113px;
+  left: 393px;
+}
+.test{
+  width: 85px;
+  height: 75px;
+  background: url("../../assets/jbSchool/right_bottom.png") no-repeat;
+  background-size: 100% ;
+  mix-blend-mode: screen;
+  position: absolute;
+  z-index: 99;
+}
+</style>
 <style scoped>
 #line-l-1,#bar,#line-r-1{
   width: calc(100vw * 512 / 1920);
