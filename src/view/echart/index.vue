@@ -11,15 +11,15 @@
         <div class="item2-1-header1">
           <el-image class="item2-1-header1-img"  :src="sch_icon"></el-image>
           <div class="item2-1-header1-div">
-            <span class="text-green">1680</span>
-            <span>在线人数</span>
+            <span class="text-green">{{data.inSchNum}}</span>
+            <span>在校人数</span>
           </div>
 
         </div>
         <div class="item2-1-header2">
           <el-image class="item2-1-header1-img"  :src="use_deny"></el-image>
           <div class="item2-1-header1-div">
-            <span class="text-org">15</span>
+            <span class="text-org">{{data.leaveNum}}</span>
             <span>请假人数</span>
           </div>
 
@@ -36,7 +36,7 @@
         </div>
         <div class="t2">
           <span>请假人数</span>
-          <span>15人</span>
+          <span>{{data.leaveNum}}人</span>
         </div>
       </div>
     </div>
@@ -63,14 +63,14 @@
           <div class="item2-2-icon1">
             <el-avatar class="item2-2-icon-i" shape="square" :src="user"/>
             <div class="item2-2-icon-msg">
-              <span class="icon-number text-green">18</span>
+              <span class="icon-number text-green">{{data.afterSch}}</span>
               <span class="icon-text">已放学</span>
             </div>
           </div>
           <div>
             <el-avatar class="item2-2-icon-i" shape="square" :src="user"/>
             <div class="item2-2-icon-msg">
-              <span class="icon-number text-ye" >18</span>
+              <span class="icon-number text-ye" >{{data.inSch}}</span>
               <span class="icon-text">放学中</span>
             </div>
 
@@ -78,7 +78,7 @@
           <div class="item2-2-icon3">
             <el-avatar class="item2-2-icon-i" shape="square" :src="user"/>
             <div class="item2-2-icon-msg">
-              <span class="icon-number text-org" >18</span>
+              <span class="icon-number text-org" >{{data.beforeSch}}</span>
               <span class="icon-text">未放学</span>
             </div>
 
@@ -96,11 +96,11 @@
       <div class="item2-3-item1">
         <div class="item2-3-item1-l">
           <div class="item1-l1">
-            <span class="text-green">1665</span>
+            <span class="text-green">{{data.enterSch}}</span>
             <span>当日进校人数</span>
           </div>
           <div class="item1-l1 mt3">
-            <span class="text-ye">1665</span>
+            <span class="text-ye">{{data.outSch}}</span>
             <span>当日出校人数</span>
           </div>
         </div>
@@ -111,7 +111,7 @@
             <div id="pie-r-1"></div>
           <div class="t3">
             <span>测温人数</span>
-            <span>15人</span>
+            <span>{{data.tempNum}}人</span>
           </div>
         </div>
       </div>
@@ -129,11 +129,6 @@
       </div>
     </div>
   </div>
-
-
-
-
-
 </div>
 </template>
 
@@ -154,17 +149,24 @@ onMounted(()=>{
   initChart('line-r-1',data.attendanceTea)
   initChart('line-r-2',data.attendanceStu)
   initPie('pie-l-1',data.leaveSex,0)
-  initPie('pie-l-2',data.leaveNum,0)
+  initPie('pie-l-2',data.leaveCategory,0)
   initPie('pie-r-1',data.temp,1)
   initBar('bar',data.leaveClass)
+  window.onresize = function () {
+    let list = ['line-l-1','line-r-1','line-r-2','pie-l-1','pie-l-2','pie-r-1','bar']
+    list.forEach(item=>{
+      const chartDom = document.getElementById(item);
+      const myChart = echarts.init(chartDom);
+      myChart.resize();
+    })
 
+  };
 })
 onUnmounted(()=>{
   clearInterval()
 })
 const initChart = (name,data) => {
   const chartDom = document.getElementById(name);
-
   const myChart = echarts.init(chartDom);
   let option;
 
@@ -214,6 +216,7 @@ const initChart = (name,data) => {
     ]
   };
   option && myChart.setOption(option);
+
 }
 const initPie = (name,data,flag) => {
   const chartDom = document.getElementById(name);
@@ -246,7 +249,7 @@ const initPie = (name,data,flag) => {
       {
         // name: 'Access From',
         type: 'pie',
-        radius: ['40%', '60%'],
+        radius: ['50%', '70%'],
         center:['29%','50%'],
         avoidLabelOverlap: false,
         label: {
@@ -274,6 +277,9 @@ const initPie = (name,data,flag) => {
   };
 
   option && myChart.setOption(option);
+  window.onresize = function () {
+    myChart.resize();
+  };
 }
 const initBar = (name,data) => {
   const chartDom = document.getElementById(name);
@@ -336,9 +342,20 @@ const initBar = (name,data) => {
   };
 
   option && myChart.setOption(option);
+  window.onresize = function () {
+    myChart.resize();
+  };
 }
 
 const data =reactive({
+  inSchNum:1680,
+  leaveNum:15,
+  enterSch:66,
+  outSch:99,
+  beforeSch:8,
+  inSch:2,
+  afterSch:9,
+  tempNum:1665,
   leaveSchool:[{classLevel:'一年级',class:[{name:'101班',status:0},{name:'102班',status:1},{name:'103班',status:2}]},
     {classLevel:'二年级',class:[{name:'101班',status:0},{name:'102班',status:1},{name:'103班',status:2}]},
     {classLevel:'三年级',class:[{name:'101班',status:0},{name:'102班',status:1},{name:'103班',status:2}]},
@@ -350,16 +367,17 @@ const data =reactive({
     {classLevel:'九年级',class:[{name:'101班',status:0},{name:'102班',status:1},{name:'103班',status:2}]}],
   leaveSex:[
     { value: 7, name: '男生' },
-    { value: 9, name: '女生' },
+    { value: 999, name: '女生' },
   ],
-  leaveNum:[
+  leaveCategory:[
     { value: 3, name: '病假' },
-    { value: 12, name: '事假' },
+    { value: 999, name: '事假' },
   ],
   temp:[
-    { value: 1650, name: '体温正常' },
-    { value: 12, name: '体温异常' },
+    { value: 1650, name: '正常' },
+    { value: 12, name: '异常' },
   ],
+
   leaveMonth:[3,6,15,36,5,6,0,5,1,3,6,20],
   attendanceStu:[3,36,5,3,5,6,10,5,1,34,6,20],
   attendanceTea:[13,6,15,36,5,36,0,5,12,3,6,20],
@@ -368,7 +386,7 @@ const data =reactive({
   getClass:(status)=> status === 0 ? 'text-org':status === 1 ?'text-ye':'text-green',
   setTime:() => {
     let d=new Date()
-    data.nowTime = `${d.getFullYear()}-${(d.getMonth()+1+'0').padStart(0,2)}-${d.getDate().toString().padStart(0,2)} ${d.getHours().toString().padStart(0,2)}:${d.getMinutes().toString().padStart(0,2)}`
+    data.nowTime = `${d.getFullYear()}-${(d.getMonth()+1+'').padStart(2,'0')}-${d.getDate().toString().padStart(2,'0')} ${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}`
   }
 
 
@@ -386,7 +404,7 @@ const data =reactive({
   height:calc(100vw * 288 / 1920) ;
 }
 #pie-l-1,#pie-l-2{
-  width: calc(100vw * 206 / 1920);
+  width: calc(100vw * 226 / 1920);
   height: calc(100vw * 152 / 1920);
 }
 .item2-1-item1,.item2-1-item2{
@@ -396,6 +414,7 @@ const data =reactive({
   background-size: 100% calc(100vw * 22 / 1920);
   margin-top: calc(100vw * 45 / 1920);
 }
+
 .mt{
   margin-top: calc(100vw * 185 / 1920);
 }
@@ -407,6 +426,23 @@ const data =reactive({
   position: relative;
   margin-top: calc(100vw * 14 / 1920);
 }
+@media (max-width: 1440px) {
+  .t1{
+    left: calc(100vw * 45 / 1920) !important;
+  }
+  .t2{
+    left: calc(100vw * 302 / 1920) !important;
+  }
+  .t3{
+    left: calc(100vw * 67 / 1920) !important;
+  }
+  #pie-r-1{
+    width: calc(100vw * 260 / 1920) !important;
+  }
+  #pie-l-1,#pie-l-2{
+    width: calc(100vw * 245 / 1920) !important;
+  }
+}
 .t1{
   position: absolute;
   color: white;
@@ -414,7 +450,7 @@ const data =reactive({
   display: flex;
   flex-direction: column;
   top: calc(100vw * 60 / 1920);
-  left: calc(100vw * 60 / 1920);
+  left: calc(100vw * 58 / 1920);
 }
 
 .t2{
@@ -424,7 +460,7 @@ const data =reactive({
   display: flex;
   flex-direction: column;
   top: calc(100vw * 60 / 1920);
-  left: calc(100vw * 317 / 1920);
+  left: calc(100vw * 314 / 1920);
 }
 .t3{
   position: absolute;
@@ -433,7 +469,7 @@ const data =reactive({
   display: flex;
   flex-direction: column;
   top: calc(100vw * 209 / 1920);
-  left: calc(100vw * 77 / 1920);
+  left: calc(100vw * 79 / 1920);
 }
 .gradient-text{
   background-image:-webkit-linear-gradient(bottom,rgba(0, 223, 255, 1),white);
@@ -646,7 +682,7 @@ const data =reactive({
   position: relative;
 }
 #pie-r-1{
-  width: calc(100vw * 250 / 1920);
+  width: calc(100vw * 240 / 1920);
   height: calc(100vw * 152 / 1920);
   /*margin-right: 60px;*/
 }
