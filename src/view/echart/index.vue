@@ -40,6 +40,9 @@
           </div>
         </div>
         <div class="item2-2-2-line"></div>
+        <div v-for="i in 9" :key="i">
+          <span v-for=" j in 6" :key="j">{{ j }}</span>
+        </div>
       </div>
     </div>
     <div class="item2-3">
@@ -184,6 +187,9 @@ const initBar = (name) => {
 </script>
 
 <style scoped>
+*{
+  margin: 0 auto;
+}
 .text-green{
   color: #00F645;
 }
