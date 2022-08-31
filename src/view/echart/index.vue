@@ -399,24 +399,24 @@ const data =reactive({
 </script>
 <style scoped>
 .tt4{
-  top: 1003px;
-  left: 1307px;
+  top: calc(100vw * 1003 /1920);
+  left: calc(100vw * 1307 /1920);
 }
 .tt3{
-  top: 113px;
-  left: 1679px;
+  top: calc(100vw * 113 /1920);
+  left: calc(100vw * 1679 /1920);
 }
 .tt2{
-  top: 554px;
-  left: 1038px;
+  top: calc(100vw * 554 /1920);
+  left: calc(100vw * 1038 /1920);
 }
 .tt1{
-  top: 113px;
-  left: 393px;
+  top: calc(100vw * 113 /1920);
+  left: calc(100vw * 393 /1920);
 }
 .test{
-  width: 85px;
-  height: 75px;
+  width: calc(100vw * 85 /1920);
+  height: calc(100vw * 75 /1920);
   background: url("../../assets/jbSchool/right_bottom.png") no-repeat;
   background-size: 100% ;
   mix-blend-mode: screen;
@@ -617,6 +617,7 @@ const data =reactive({
   position: relative;
 }
 .item1-img{
+  width: calc(100vw * 494 / 1920);
   height: calc(100vw * 44 / 1920);
   margin-top: calc(100vw * 23 / 1920);
 }
