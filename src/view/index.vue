@@ -57,7 +57,12 @@
       </template>
     </el-dialog>
     <el-button @click="Func.gopage">go page</el-button>
-  
+    <div class="item1">
+      <div class="ix">
+        hhh
+      </div>
+    </div>
+
   </div>
 </template>
 
@@ -133,7 +138,7 @@ import {routerStack} from "@/stack";
       routerStack.push('/page1',router)
    }
 })
-   window.onload = Func.getAll
+   window.onload = Func.getAll()
   const submitForm = () => {
     if (title.value==='添加')
     add(ruleForm.value).then(res =>{
@@ -154,6 +159,19 @@ import {routerStack} from "@/stack";
   }
 </script>
 
-<style scoped>
-
+<style scoped lang="scss">
+@mixin flexWidth($size){
+  width:  (100vw * $size /1920)
+}
+@function flexSize($size:12, $screenWidth:1920){
+  @return (100vw * $size / $screenWidth)
+}
+.item1{
+  .ix{
+    color: red;
+     //@include flexWidth(44);
+    width: flexSize(440);
+    border: 1px solid aquamarine;
+  }
+}
 </style>

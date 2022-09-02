@@ -25,6 +25,7 @@
     <div class="div3">
       动画效果
     </div>
+    <span class="gradient-text-one">渐变文字</span>
 
   </div>
 
@@ -45,6 +46,7 @@
   background-image:-webkit-linear-gradient(bottom,rgba(0, 223, 255, 1),white);
   -webkit-background-clip:text;
   -webkit-text-fill-color:transparent;
+  font-size: 40px;
 }
 </style>
 <style scoped>
