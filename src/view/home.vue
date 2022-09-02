@@ -9,10 +9,13 @@
       <div>
         <router-link to="/echarts">驾驶舱</router-link>
       </div>
-      <div>
-        <router-link to="/3d">星云</router-link>
-      </div>
+<!--      <div>-->
+<!--        <router-link to="/3d">星云</router-link>-->
+<!--      </div>-->
         <div @click="setReq">发送请求</div>
+      <div>
+        <router-link to="/3d">测试宏</router-link>
+      </div>
     </div>
 
 </template>

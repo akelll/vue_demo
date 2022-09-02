@@ -1,0 +1,64 @@
+$width:calc(100vw - 28px);
+$colorList:(
+0:#FF0000,1:#FFA500,2:#FFFF00,3:#12ec12,4:#00FFFF,5: #0000FF,6:#800080,7:#EC12FF
+);
+@function flexSize($size,$screen:1920){
+  @return (100vw * $size / $screen)
+}
+@mixin fixedBtn($nums:1,$position:fixed){
+  width: (100vw - flexSize(25,375));
+  position: $position;
+  background-color: #d7d7d7;
+  height: flexSize(35,375);
+  bottom: 0;
+  padding: flexSize(7,375) flexSize(14,375);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  .el-button{
+    flex: 1;
+    height: flexSize(32,375);
+  }
+  .el-button +.el-button{
+    margin-left: flexSize(14,375);
+  }
+}
+
+@mixin imgBox(){
+  > div{
+    margin: 5px;
+    border: 1px solid #ccc;
+    float: left;
+    width: 180px;
+    &:hover{
+      border: 1px solid #777;
+    }
+    img {
+      width: 100%;
+      height: auto;
+      &:hover{
+        opacity: 0.8;
+      }
+    }
+
+    >div{
+      padding: 15px;
+      text-align: center;
+    }
+  }
+}
+
+@mixin colorMutiply($nums){
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  //span:nth-child(2){
+  //  color: (#5090d0 *2)
+  //}
+  @for $i from 1 through  $nums  {
+    span:nth-child(#{$i}){
+      color: map-get($colorList,$i - 1)
+    }
+  }
+
+}
