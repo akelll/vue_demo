@@ -3,8 +3,8 @@ import {createRouter, createWebHashHistory, createWebHistory} from 'vue-router'
 import {routerStack} from "@/stack";
 
 const routes = [
-    {path:'/',component:()=>import('@/view/home.vue')},
-    {path:'/echarts',component:()=>import('@/view/echart/index.vue')},
+    {path:'/echarts',component:()=>import('@/view/home.vue')},
+    {path:'/',component:()=>import('@/view/echart/index.vue')},
     {path:'/css',component:()=>import('@/view/cssPage/index.vue')},
     {path:'/3d',component:()=>import('@/view/hong/index.vue')},
     {path:'/index',component:()=>import('@/view/index.vue')},

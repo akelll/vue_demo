@@ -4,12 +4,26 @@ module.exports = defineConfig({
   devServer:{
     proxy:{
       '/api':{
-        target:'http://127.0.0.1:8099',
+        target:'http://192.168.1.10',
         changeOrigin:true,
         pathRewrite: {
           ['^/api' ]: ''
         }
+      },
+      '/pro-api':{
+        target: 'http://192.168.1.10/YFDataView/Show',
+        changeOrigin:true,
+        pathRewrite: {
+          ['^/pro-api' ]: ''
+        }
       }
     }
+  },
+  chainWebpack:config => {
+    config
+        .plugin('html').tap(args => {
+      args[0].title = '江北中心学校数据驾驶舱';
+      return args
+    })
   }
 })

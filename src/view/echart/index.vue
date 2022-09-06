@@ -1,6 +1,6 @@
 <template>
 <div id="page1">
-  <div class="item1">
+  <div class="item1" @dblclick="data.screen">
     <el-image class="item1-img"  :src="title"></el-image>
     <span class="item1-time">{{data.nowTime}}</span>
   </div>
@@ -32,7 +32,7 @@
         <div id="pie-l-2" ></div>
         <div class="t1">
           <span>请假人数</span>
-          <span>15人</span>
+          <span>{{data.leaveNum}}</span>
         </div>
         <div class="t2">
           <span>请假人数</span>
@@ -58,6 +58,7 @@
         <el-image class="item2-img"  :src="img"></el-image>
       </div>
       <div class="item2-2-2">
+        <div class="test tt2"></div>
         <span class="title2">放学信息</span>
         <div class="item2-2-icon">
           <div class="item2-2-icon1">
@@ -87,11 +88,13 @@
         <div class="item2-2-2-line"></div>
        <div class="item2-2-class"  v-for="(item,i) in data.leaveSchool" :key="i">
          <div class="item2-2-class-label">{{item.classLevel}}</div>
-         <span class="text-ml" :class="data.getClass(ck.status)" v-for="(ck,j) in item.class" :key="j">{{ck.name}}</span>
+         <span class="text-ml" :class="data.getClass(ck.value)" v-for="(ck,j) in item.classInfo" :key="j">{{ck.name}}</span>
        </div>
       </div>
     </div>
     <div class="item2-3">
+      <div class="test tt3"></div>
+      <div class="test tt4"></div>
       <span class="title3">闸机出入数据</span>
       <div class="item2-3-item1">
         <div class="item2-3-item1-l">
@@ -130,9 +133,8 @@
     </div>
   </div>
   <div class="test tt1"></div>
-  <div class="test tt2"></div>
-  <div class="test tt3"></div>
-  <div class="test tt4"></div>
+
+
 </div>
 </template>
 
@@ -144,27 +146,65 @@ import title from '@/assets/jbSchool/title.png'
 import user from '@/assets/jbSchool/icon_user.png'
 import sch_icon from '@/assets/jbSchool/icon_sch.png'
 import use_deny from '@/assets/jbSchool/icon_deny.png'
+import {getInfo} from "@/api";
 
 onMounted(()=>{
-  setInterval(()=>{
-    data.setTime()
-  },1000)
-  initChart('line-l-1',data.leaveMonth)
-  initChart('line-r-1',data.attendanceTea)
-  initChart('line-r-2',data.attendanceStu)
-  initPie('pie-l-1',data.leaveSex,0)
-  initPie('pie-l-2',data.leaveCategory,0)
-  initPie('pie-r-1',data.temp,1)
-  initBar('bar',data.leaveClass)
-  window.onresize = function () {
-    let list = ['line-l-1','line-r-1','line-r-2','pie-l-1','pie-l-2','pie-r-1','bar']
-    list.forEach(item=>{
-      const chartDom = document.getElementById(item);
-      const myChart = echarts.init(chartDom);
-      myChart.resize();
-    })
+  data.ds()
+  data.setTime()
 
-  };
+  getInfo(100002).then(res=>{
+    let d =JSON.parse(res.data.Data.ModuleJson)
+    data.beforeSch = d.beforeSch
+    data.inSch = d.inSch
+    data.afterSch = d.afterSch
+    data.leaveSchool = d.leaveSchool
+  })
+  getInfo(100001).then(res =>{
+    let d =JSON.parse(res.data.Data.ModuleJson)
+    data.inSchNum = d.inSchNum
+    data.leaveNum = d.leaveNum
+    data.leaveSex = d.leaveSex
+    data.leaveCategory = d.leaveCategory
+    data.leaveMonth = data.transferValue(d.leaveMonth)
+    data.leaveClass = data.transferValue(d.leaveClass)
+    initChart('line-l-1',data.leaveMonth)
+    initPie('pie-l-1',data.leaveSex,0)
+    initPie('pie-l-2',data.leaveCategory,0)
+    initBar('bar',data.leaveClass)
+    window.onresize = function () {
+      let list = ['line-l-1','line-r-1','line-r-2','pie-l-1','pie-l-2','pie-r-1','bar']
+      list.forEach(item=>{
+        const chartDom = document.getElementById(item);
+        const myChart = echarts.init(chartDom);
+        myChart.resize();
+      })
+
+    };
+  })
+  getInfo(100003).then(res =>{
+    let d =JSON.parse(res.data.Data.ModuleJson)
+    data.enterSch = d.enterSch
+    data.outSch = d.outSch
+    data.tempNum = d.tempNum
+    data.leaveCategory = d.leaveCategory
+    data.temp = d.temp
+    data.attendanceStu = data.transferValue(d.attendanceStu)
+    data.attendanceTea = data.transferValue(d.attendanceTea)
+    data.leaveClass = d.leaveClass
+    initPie('pie-r-1',data.temp,1)
+    initChart('line-r-1',data.attendanceTea)
+    initChart('line-r-2',data.attendanceStu)
+    window.onresize = function () {
+      let list = ['line-l-1','line-r-1','line-r-2','pie-l-1','pie-l-2','pie-r-1','bar']
+      list.forEach(item=>{
+        const chartDom = document.getElementById(item);
+        const myChart = echarts.init(chartDom);
+        myChart.resize();
+      })
+
+    };
+  })
+
 })
 onUnmounted(()=>{
   clearInterval()
@@ -187,7 +227,7 @@ const initChart = (name,data) => {
           color: 'rgba(139, 208, 255, 1)',//坐标线的颜色
         }
       },
-      data: ['一月', '二月', '三月', '四月', '五月', '六月', '七月','八月','九月','十月','十一月','十二月']
+      data: data.name
     },
     tooltip: {
       order: 'valueDesc',
@@ -214,7 +254,7 @@ const initChart = (name,data) => {
 
     series: [
       {
-        data: data,
+        data: data.value,
         type: 'line'
       }
     ]
@@ -223,6 +263,7 @@ const initChart = (name,data) => {
 
 }
 const initPie = (name,data,flag) => {
+  // console.log(data)
   const chartDom = document.getElementById(name);
   const myChart = echarts.init(chartDom);
   let option;
@@ -293,7 +334,7 @@ const initBar = (name,data) => {
   option = {
     xAxis: {
       type: 'category',
-      data: ['一年级', '二年级', '三年级', '四年级', '五年级', '六年级', '七年级','八年级','九年级'],
+      data: data.name,
       axisLabel:{
         color:'#fff',
         size:'11px'
@@ -332,7 +373,7 @@ const initBar = (name,data) => {
     },
     series: [
       {
-        data: data,
+        data: data.value,
         type: 'bar',
         itemStyle: {
           color: function (params) {
@@ -360,59 +401,130 @@ const data =reactive({
   inSch:2,
   afterSch:9,
   tempNum:1665,
-  leaveSchool:[{classLevel:'一年级',class:[{name:'101班',status:0},{name:'102班',status:1},{name:'103班',status:2}]},
-    {classLevel:'二年级',class:[{name:'101班',status:0},{name:'102班',status:1},{name:'103班',status:2}]},
-    {classLevel:'三年级',class:[{name:'101班',status:0},{name:'102班',status:1},{name:'103班',status:2}]},
-    {classLevel:'四年级',class:[{name:'101班',status:0},{name:'102班',status:1},{name:'103班',status:2}]},
-    {classLevel:'五年级',class:[{name:'101班',status:0},{name:'102班',status:1},{name:'103班',status:2}]},
-    {classLevel:'六年级',class:[{name:'101班',status:0},{name:'102班',status:1},{name:'103班',status:2}]},
-    {classLevel:'七年级',class:[{name:'101班',status:0},{name:'102班',status:1},{name:'103班',status:2}]},
-    {classLevel:'八年级',class:[{name:'101班',status:0},{name:'102班',status:1},{name:'103班',status:2}]},
-    {classLevel:'九年级',class:[{name:'101班',status:0},{name:'102班',status:1},{name:'103班',status:2}]}],
-  leaveSex:[
-    { value: 7, name: '男生' },
-    { value: 999, name: '女生' },
-  ],
-  leaveCategory:[
-    { value: 3, name: '病假' },
-    { value: 999, name: '事假' },
-  ],
-  temp:[
-    { value: 1650, name: '正常' },
-    { value: 12, name: '异常' },
-  ],
-
-  leaveMonth:[3,6,15,36,5,6,0,5,1,3,6,20],
-  attendanceStu:[3,36,5,3,5,6,10,5,1,34,6,20],
-  attendanceTea:[13,6,15,36,5,36,0,5,12,3,6,20],
-  leaveClass:[120, 200, 150, 80, 70, 110, 130,50,5],
+  leaveSchool:[],
+  leaveSex:[],
+  leaveCategory:[],
+  temp:[],
+  leaveMonth:null,
+  attendanceStu:null,
+  attendanceTea:null,
+  leaveClass:null,
   nowTime:null,
-  getClass:(status)=> status === 0 ? 'text-org':status === 1 ?'text-ye':'text-green',
+  fullscreen:false,
+  getClass:(value)=> value === 0 ? 'text-org':value === 1 ?'text-ye':'text-green',
   setTime:() => {
     let d=new Date()
     data.nowTime = `${d.getFullYear()}-${(d.getMonth()+1+'').padStart(2,'0')}-${d.getDate().toString().padStart(2,'0')} ${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}`
-  }
+  },
+  transferValue(data){
+    let demo = {},list1=[],list2=[]
+    data.forEach(item=>{
+      list1.push(item.name)
+      list2.push(item.value)
+    })
+    demo.name = list1
+    demo.value = list2
+    return demo
+  },
+  ds:()=>{
+    setInterval(()=>{
+      data.setTime()
+    },1000)
+    setInterval(()=>{
+      getInfo(100002).then(res=>{
+        let d =JSON.parse(res.data.Data.ModuleJson)
+        data.beforeSch = d.beforeSch
+        data.inSch = d.inSch
+        data.afterSch = d.afterSch
+        data.leaveSchool = d.leaveSchool
+      })
+    },1000 * 60)
+    setInterval(()=>{
+      getInfo(100001).then(res =>{
+        let d =JSON.parse(res.data.Data.ModuleJson)
+        data.inSchNum = d.inSchNum
+        data.leaveNum = d.leaveNum
+        data.leaveSex = d.leaveSex
+        data.leaveCategory = d.leaveCategory
+        data.leaveMonth = data.transferValue(d.leaveMonth)
+        data.leaveClass = data.transferValue(d.leaveClass)
+        initChart('line-l-1',data.leaveMonth)
+        initPie('pie-l-1',data.leaveSex,0)
+        initPie('pie-l-2',data.leaveCategory,0)
+        initBar('bar',data.leaveClass)
+      })
+      getInfo(100003).then(res =>{
+        let d =JSON.parse(res.data.Data.ModuleJson)
+        data.enterSch = d.enterSch
+        data.outSch = d.outSch
+        data.tempNum = d.tempNum
+        data.leaveCategory = d.leaveCategory
+        data.temp = d.temp
+        data.attendanceStu = data.transferValue(d.attendanceStu)
+        data.attendanceTea = data.transferValue(d.attendanceTea)
+        data.leaveClass = d.leaveClass
+        initPie('pie-r-1',data.temp,1)
+        initChart('line-r-1',data.attendanceTea)
+        initChart('line-r-2',data.attendanceStu)
+      })
+    },1000 * 60 * 60)
+  },
+  screen:()=>{
+      let element = document.documentElement;
+      if (data.fullscreen) {
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        } else if (document.webkitCancelFullScreen) {
+          document.webkitCancelFullScreen();
+        } else if (document.mozCancelFullScreen) {
+          document.mozCancelFullScreen();
+        } else if (document.msExitFullscreen) {
+          document.msExitFullscreen();
+        }
+      } else {
+        if (element.requestFullscreen) {
+          element.requestFullscreen();
+        } else if (element.webkitRequestFullScreen) {
+          element.webkitRequestFullScreen();
+        } else if (element.mozRequestFullScreen) {
+          element.mozRequestFullScreen();
+        } else if (element.msRequestFullscreen) {
+          // IE11
+          element.msRequestFullscreen();
+        }
+      }
+      data.fullscreen = !data.fullscreen;
 
+  }
 
 })
 
 </script>
 <style scoped>
 .tt4{
-  top: calc(100vw * 1003 /1920);
-  left: calc(100vw * 1307 /1920);
+  top: calc(100vw * 890 /1920);
+  left: calc(100vw * -15 /1920);
+  animation:myfirst 5s linear infinite;
 }
 .tt3{
-  top: calc(100vw * 113 /1920);
-  left: calc(100vw * 1679 /1920);
+  top: calc(100vw * 0 /1920);
+  left: calc(100vw * 355 /1920);
+  animation:myfirst 4s linear infinite;
 }
 .tt2{
-  top: calc(100vw * 554 /1920);
-  left: calc(100vw * 1038 /1920);
+  top: calc(100vw * -15 /1920);
+  left: calc(100vw * 414 /1920);
+  animation:myfirst 6s linear infinite;
 }
 .tt1{
   top: calc(100vw * 113 /1920);
   left: calc(100vw * 393 /1920);
+  animation:myfirst 5s linear infinite;
+}
+@keyframes myfirst {
+  0%  {opacity: 1;}
+  50%  {opacity: 0.6;}
+  100%  {opacity: 1;}
 }
 .test{
   width: calc(100vw * 85 /1920);

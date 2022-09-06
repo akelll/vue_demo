@@ -5,3 +5,9 @@ export function test1(){
        console.log(res)
    })
 }
+export function getInfo(id){
+
+    return  axios({url:'api/YFDataView/Show/GetModuleInfo?Id='+id,
+     method:'post'
+     })
+}
