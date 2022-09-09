@@ -3,7 +3,7 @@ import {createRouter, createWebHashHistory, createWebHistory} from 'vue-router'
 import {routerStack} from "@/stack";
 
 const routes = [
-    {path:'/echarts',component:()=>import('@/view/home.vue')},
+    {path:'/home',component:()=>import('@/view/home.vue')},
     {path:'/',component:()=>import('@/view/echart/index.vue')},
     {path:'/css',component:()=>import('@/view/cssPage/index.vue')},
     {path:'/3d',component:()=>import('@/view/hong/index.vue')},
@@ -14,8 +14,8 @@ const routes = [
 ]
 
 const router = createRouter({
-    history:createWebHistory(),
-    routes
+    history:createWebHashHistory(),
+    routes,
 });
 router.beforeEach((to,form,next)=>{
     routerStack.stack_push({form:to.path,fullPath:to.fullPath})

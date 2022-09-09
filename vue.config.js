@@ -1,13 +1,26 @@
 const { defineConfig } = require('@vue/cli-service')
+
 module.exports = defineConfig({
+  publicPath:"./",
+  outputDir:"dist",
+  indexPath:"index.html",
+  filenameHashing:true,
   transpileDependencies: true,
   devServer:{
     proxy:{
       '/api':{
-        target:'http://192.168.1.101/jbxx_jsc',
+        // target:'http://192.168.1.101/jbxx_jsc',
+        target:'http://www.zhihuiyunxiao.net/jbxx_datashow',
         changeOrigin:true,
         pathRewrite: {
           ['^/api' ]: ''
+        }
+      },
+      '/test':{
+        target:'https://jike777.com',
+        changeOrigin:true,
+        pathRewrite: {
+          ['^/test' ]: ''
         }
       },
       '/pro-dev':{

@@ -28,10 +28,17 @@
     <span class="gradient-text-one">渐变文字</span>
 
   </div>
+  <div>
+    <span style="color: #000000;">000</span>
+    <span style="color: #a68181;">001</span>
+
+  </div>
 
 
 </template>
+<style scoped>
 
+</style>
 <script setup>
   import {useRouter} from "vue-router/dist/vue-router";
   import {routerStack} from "@/stack";

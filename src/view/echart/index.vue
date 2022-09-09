@@ -562,8 +562,8 @@ watch(()=>data.intervalTimes3,()=>{
 </script>
 <style scoped>
 .tt4{
-  top: calc(100vw * 890 /1920);
-  left: calc(100vw * -15 /1920);
+  top: calc(100vw * 873 /1920);
+  left: calc(100vw * -29 /1920);
   animation:myfirst 5s linear infinite;
 }
 .tt3{
@@ -585,13 +585,19 @@ watch(()=>data.intervalTimes3,()=>{
   0%  {opacity: 1;}
   50%  {opacity: 0.6;}
   100%  {opacity: 1;}
+  /*0%{mix-blend-mode:  screen;opacity: 1;}*/
+  /*25%{mix-blend-mode:  exclusion;}*/
+  /*50%{mix-blend-mode:  difference;opacity: 0.6;}*/
+  /*75%{mix-blend-mode:  color-dodge;}*/
+  /*100%{mix-blend-mode:  lighten;opacity: 1;}*/
 }
 .test{
   width: calc(100vw * 85 /1920);
   height: calc(100vw * 75 /1920);
   background: url("../../assets/jbSchool/right_bottom.png") no-repeat;
   background-size: 100% ;
-  mix-blend-mode: screen;
+  /*screen 原色  exclusion 金色  difference 黑色  color-dodge 亮度增加 lighten 灰色*/
+  mix-blend-mode:  screen;
   position: absolute;
   z-index: 99;
 }

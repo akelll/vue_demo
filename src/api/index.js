@@ -1,4 +1,5 @@
 import axios from 'axios'
+import $ from 'jquery'
 export function test1(){
     let data = {username:'test001',password:'123'}
    axios({url:'api/login',methods:'post',data:data}).then(res=>{
@@ -6,8 +7,13 @@ export function test1(){
    })
 }
 export function getInfo(id){
-
     return  axios({url:'api/Show/GetModuleInfo?Id='+id,
-     method:'post'
+     method:'post',
+        headers: {
+            "Content-Type": "application/json"
+        },
      })
+}
+export function jc(data){
+    return axios({url:'test/handler',method:'post',data:data})
 }
