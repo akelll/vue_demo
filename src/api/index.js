@@ -7,7 +7,7 @@ export function test1(){
 }
 export function getInfo(id){
 
-    return  axios({url:'api/YFDataView/Show/GetModuleInfo?Id='+id,
+    return  axios({url:'api/Show/GetModuleInfo?Id='+id,
      method:'post'
      })
 }

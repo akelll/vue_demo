@@ -1,6 +1,6 @@
 <template>
-<div id="page1">
-  <div class="item1" @dblclick="data.screen">
+<div id="page1" @dblclick="data.screen">
+  <div class="item1" >
     <el-image class="item1-img"  :src="title"></el-image>
     <span class="item1-time">{{data.nowTime}}</span>
   </div>
@@ -32,7 +32,7 @@
         <div id="pie-l-2" ></div>
         <div class="t1">
           <span>请假人数</span>
-          <span>{{data.leaveNum}}</span>
+          <span>{{data.leaveNum}}人</span>
         </div>
         <div class="t2">
           <span>请假人数</span>
@@ -139,7 +139,7 @@
 </template>
 
 <script setup>
-import {onMounted, onUnmounted, reactive} from "vue";
+import {onMounted, onUnmounted, reactive, watch} from "vue";
 import * as echarts from 'echarts'
 import img from '@/assets/jbSchool/img.jpg'
 import title from '@/assets/jbSchool/title.png'
@@ -150,65 +150,22 @@ import {getInfo} from "@/api";
 
 onMounted(()=>{
   data.ds()
-  data.setTime()
+  setInterval(()=>{
+    data.setTime()
+  },1000)
+  data.getData()
 
-  getInfo(100002).then(res=>{
-    let d =JSON.parse(res.data.Data.ModuleJson)
-    data.beforeSch = d.beforeSch
-    data.inSch = d.inSch
-    data.afterSch = d.afterSch
-    data.leaveSchool = d.leaveSchool
-  })
-  getInfo(100001).then(res =>{
-    let d =JSON.parse(res.data.Data.ModuleJson)
-    data.inSchNum = d.inSchNum
-    data.leaveNum = d.leaveNum
-    data.leaveSex = d.leaveSex
-    data.leaveCategory = d.leaveCategory
-    data.leaveMonth = data.transferValue(d.leaveMonth)
-    data.leaveClass = data.transferValue(d.leaveClass)
-    initChart('line-l-1',data.leaveMonth)
-    initPie('pie-l-1',data.leaveSex,0)
-    initPie('pie-l-2',data.leaveCategory,0)
-    initBar('bar',data.leaveClass)
-    window.onresize = function () {
-      let list = ['line-l-1','line-r-1','line-r-2','pie-l-1','pie-l-2','pie-r-1','bar']
-      list.forEach(item=>{
-        const chartDom = document.getElementById(item);
-        const myChart = echarts.init(chartDom);
-        myChart.resize();
-      })
-
-    };
-  })
-  getInfo(100003).then(res =>{
-    let d =JSON.parse(res.data.Data.ModuleJson)
-    data.enterSch = d.enterSch
-    data.outSch = d.outSch
-    data.tempNum = d.tempNum
-    data.leaveCategory = d.leaveCategory
-    data.temp = d.temp
-    data.attendanceStu = data.transferValue(d.attendanceStu)
-    data.attendanceTea = data.transferValue(d.attendanceTea)
-    data.leaveClass = d.leaveClass
-    initPie('pie-r-1',data.temp,1)
-    initChart('line-r-1',data.attendanceTea)
-    initChart('line-r-2',data.attendanceStu)
-    window.onresize = function () {
-      let list = ['line-l-1','line-r-1','line-r-2','pie-l-1','pie-l-2','pie-r-1','bar']
-      list.forEach(item=>{
-        const chartDom = document.getElementById(item);
-        const myChart = echarts.init(chartDom);
-        myChart.resize();
-      })
-
-    };
-  })
 
 })
 onUnmounted(()=>{
-  clearInterval()
+  clearInterval(data.timer1)
+  data.timer1 = null
+  clearInterval(data.timer2)
+  data.timer2 = null
+  clearInterval(data.timer3)
+  data.timer3 = null
 })
+
 const initChart = (name,data) => {
   const chartDom = document.getElementById(name);
   const myChart = echarts.init(chartDom);
@@ -393,6 +350,12 @@ const initBar = (name,data) => {
 }
 
 const data =reactive({
+  timer1:null,
+  timer2:null,
+  timer3:null,
+  intervalTimes1:1,
+  intervalTimes2:1,
+  intervalTimes3:1,
   inSchNum:1680,
   leaveNum:15,
   enterSch:66,
@@ -426,48 +389,74 @@ const data =reactive({
     demo.value = list2
     return demo
   },
-  ds:()=>{
-    setInterval(()=>{
-      data.setTime()
-    },1000)
-    setInterval(()=>{
-      getInfo(100002).then(res=>{
-        let d =JSON.parse(res.data.Data.ModuleJson)
-        data.beforeSch = d.beforeSch
-        data.inSch = d.inSch
-        data.afterSch = d.afterSch
-        data.leaveSchool = d.leaveSchool
-      })
-    },1000 * 60)
-    setInterval(()=>{
-      getInfo(100001).then(res =>{
-        let d =JSON.parse(res.data.Data.ModuleJson)
-        data.inSchNum = d.inSchNum
-        data.leaveNum = d.leaveNum
-        data.leaveSex = d.leaveSex
-        data.leaveCategory = d.leaveCategory
-        data.leaveMonth = data.transferValue(d.leaveMonth)
-        data.leaveClass = data.transferValue(d.leaveClass)
-        initChart('line-l-1',data.leaveMonth)
-        initPie('pie-l-1',data.leaveSex,0)
-        initPie('pie-l-2',data.leaveCategory,0)
-        initBar('bar',data.leaveClass)
-      })
-      getInfo(100003).then(res =>{
-        let d =JSON.parse(res.data.Data.ModuleJson)
-        data.enterSch = d.enterSch
-        data.outSch = d.outSch
-        data.tempNum = d.tempNum
-        data.leaveCategory = d.leaveCategory
-        data.temp = d.temp
-        data.attendanceStu = data.transferValue(d.attendanceStu)
-        data.attendanceTea = data.transferValue(d.attendanceTea)
-        data.leaveClass = d.leaveClass
-        initPie('pie-r-1',data.temp,1)
-        initChart('line-r-1',data.attendanceTea)
-        initChart('line-r-2',data.attendanceStu)
-      })
-    },1000 * 60 * 60)
+  ds:(index)=>{
+    if (index===1){
+      data.timer1 = setInterval(()=>{
+        getInfo(100001).then(res =>{
+          data.intervalTimes1 = res.data.Data.ReqInterval
+          let d =JSON.parse(res.data.Data.ModuleJson)
+          data.inSchNum = d.inSchNum
+          data.leaveNum = d.leaveNum
+          data.leaveSex = d.leaveSex
+          data.leaveCategory = d.leaveCategory
+          data.leaveMonth = data.transferValue(d.leaveMonth)
+          data.leaveClass = data.transferValue(d.leaveClass)
+          initChart('line-l-1',data.leaveMonth)
+          initPie('pie-l-1',data.leaveSex,0)
+          initPie('pie-l-2',data.leaveCategory,0)
+          initBar('bar',data.leaveClass)
+          window.onresize = function () {
+            let list = ['line-l-1','line-r-1','line-r-2','pie-l-1','pie-l-2','pie-r-1','bar']
+            list.forEach(item=>{
+              const chartDom = document.getElementById(item);
+              const myChart = echarts.init(chartDom);
+              myChart.resize();
+            })
+
+          };
+        })
+      },1000 * data.intervalTimes1)
+    }else if (index===2){
+      data.timer2 = setInterval(()=>{
+        getInfo(100002).then(res=>{
+          data.intervalTimes2 = res.data.Data.ReqInterval
+          let d =JSON.parse(res.data.Data.ModuleJson)
+          data.beforeSch = d.beforeSch
+          data.inSch = d.inSch
+          data.afterSch = d.afterSch
+          data.leaveSchool = d.leaveSchool
+        })
+      },1000 * data.intervalTimes2)
+    }else if(index===3){
+      data.timer3 = setInterval(()=>{
+        getInfo(100003).then(res =>{
+          data.intervalTimes3 = res.data.Data.ReqInterval
+          let d =JSON.parse(res.data.Data.ModuleJson)
+          data.enterSch = d.enterSch
+          data.outSch = d.outSch
+          data.tempNum = d.tempNum
+          data.leaveCategory = d.leaveCategory
+          data.temp = d.temp
+          data.attendanceStu = data.transferValue(d.attendanceStu)
+          data.attendanceTea = data.transferValue(d.attendanceTea)
+          data.leaveClass = d.leaveClass
+          initPie('pie-r-1',data.temp,1)
+          initChart('line-r-1',data.attendanceTea)
+          initChart('line-r-2',data.attendanceStu)
+          window.onresize = function () {
+            let list = ['line-l-1','line-r-1','line-r-2','pie-l-1','pie-l-2','pie-r-1','bar']
+            list.forEach(item=>{
+              const chartDom = document.getElementById(item);
+              const myChart = echarts.init(chartDom);
+              myChart.resize();
+            })
+
+          };
+        })
+      },1000 * data.intervalTimes3)
+    }
+
+
   },
   screen:()=>{
       let element = document.documentElement;
@@ -495,10 +484,81 @@ const data =reactive({
       }
       data.fullscreen = !data.fullscreen;
 
+  },
+  getData:()=>{
+    getInfo(100002).then(res=>{
+      data.intervalTimes2 = res.data.Data.ReqInterval
+      let d =JSON.parse(res.data.Data.ModuleJson)
+      data.beforeSch = d.beforeSch
+      data.inSch = d.inSch
+      data.afterSch = d.afterSch
+      data.leaveSchool = d.leaveSchool
+    })
+    getInfo(100001).then(res =>{
+      data.intervalTimes1 = res.data.Data.ReqInterval
+      let d =JSON.parse(res.data.Data.ModuleJson)
+      data.inSchNum = d.inSchNum
+      data.leaveNum = d.leaveNum
+      data.leaveSex = d.leaveSex
+      data.leaveCategory = d.leaveCategory
+      data.leaveMonth = data.transferValue(d.leaveMonth)
+      data.leaveClass = data.transferValue(d.leaveClass)
+      initChart('line-l-1',data.leaveMonth)
+      initPie('pie-l-1',data.leaveSex,0)
+      initPie('pie-l-2',data.leaveCategory,0)
+      initBar('bar',data.leaveClass)
+      window.onresize = function () {
+        let list = ['line-l-1','line-r-1','line-r-2','pie-l-1','pie-l-2','pie-r-1','bar']
+        list.forEach(item=>{
+          const chartDom = document.getElementById(item);
+          const myChart = echarts.init(chartDom);
+          myChart.resize();
+        })
+
+      };
+    })
+    getInfo(100003).then(res =>{
+      data.intervalTimes3 = res.data.Data.ReqInterval
+      let d =JSON.parse(res.data.Data.ModuleJson)
+      data.enterSch = d.enterSch
+      data.outSch = d.outSch
+      data.tempNum = d.tempNum
+      data.leaveCategory = d.leaveCategory
+      data.temp = d.temp
+      data.attendanceStu = data.transferValue(d.attendanceStu)
+      data.attendanceTea = data.transferValue(d.attendanceTea)
+      data.leaveClass = d.leaveClass
+      initPie('pie-r-1',data.temp,1)
+      initChart('line-r-1',data.attendanceTea)
+      initChart('line-r-2',data.attendanceStu)
+      window.onresize = function () {
+        let list = ['line-l-1','line-r-1','line-r-2','pie-l-1','pie-l-2','pie-r-1','bar']
+        list.forEach(item=>{
+          const chartDom = document.getElementById(item);
+          const myChart = echarts.init(chartDom);
+          myChart.resize();
+        })
+
+      };
+    })
   }
 
 })
-
+watch(()=>data.intervalTimes1,()=>{
+  clearInterval(data.timer1)
+  data.timer1 = null
+  data.ds(1)
+})
+watch(()=>data.intervalTimes2,()=>{
+  clearInterval(data.timer2)
+  data.timer2 = null
+  data.ds(2)
+})
+watch(()=>data.intervalTimes3,()=>{
+  clearInterval(data.timer3)
+  data.timer3 = null
+  data.ds(3)
+})
 </script>
 <style scoped>
 .tt4{

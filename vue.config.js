@@ -4,17 +4,17 @@ module.exports = defineConfig({
   devServer:{
     proxy:{
       '/api':{
-        target:'http://192.168.1.10',
+        target:'http://192.168.1.101/jbxx_jsc',
         changeOrigin:true,
         pathRewrite: {
           ['^/api' ]: ''
         }
       },
-      '/pro-api':{
+      '/pro-dev':{
         target: 'http://192.168.1.10/YFDataView/Show',
         changeOrigin:true,
         pathRewrite: {
-          ['^/pro-api' ]: ''
+          ['^/pro-dev' ]: ''
         }
       }
     }
