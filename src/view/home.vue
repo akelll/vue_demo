@@ -16,6 +16,21 @@
       <div>
         <router-link to="/3d">测试宏</router-link>
       </div>
+      <div>
+        <router-link to="/3ds">3d效果</router-link>
+      </div>
+      <div>
+        <router-link to="/3ds2">3d效果2</router-link>
+      </div>
+      <div>
+        <router-link to="/mobileTable">移动端表格</router-link>
+      </div>
+      <div>
+        <router-link to="/mobileTable2">移动端表格2</router-link>
+      </div>
+      <div>
+        <router-link to="/file">文件</router-link>
+      </div>
     </div>
 
 </template>

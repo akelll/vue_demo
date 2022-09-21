@@ -1,7 +1,11 @@
 <template>
   <div id="app">
     <router-view v-slot="{ Component }" />
-
+<!--    <HelloWorld msg="Welcome to Your Vue.js App" >-->
+<!--      <template #age="scope">-->
+<!--        <div style="color: red"> {{scope.data}}</div>-->
+<!--      </template>-->
+<!--    </HelloWorld>-->
   </div>
 
 </template>

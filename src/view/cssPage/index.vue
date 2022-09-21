@@ -29,8 +29,7 @@
 
   </div>
   <div>
-    <span style="color: #000000;">000</span>
-    <span style="color: #a68181;">001</span>
+    <span style="filter: glow(color=#4a7ac9,strength=12);font-size: 48px;">001</span>
 
   </div>
 

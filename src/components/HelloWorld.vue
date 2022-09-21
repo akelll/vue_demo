@@ -6,7 +6,7 @@
         <span>姓名:</span><span><slot name="name"></slot></span>
       </div>
       <div>
-        <span>年龄:</span><span><slot name="age"></slot></span>
+        <span>年龄:</span><span><slot name="age" :data="msg"></slot></span>
       </div>
     </div>
 
