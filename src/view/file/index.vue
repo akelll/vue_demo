@@ -1,58 +1,67 @@
 <template>
-  <div>
+  <div style="width: 200px;height: 200px">
     <el-upload
         class="upload-demo"
         action="#"
         drag
+        :show-file-list="false"
         :on-change="onbeforeunload"
         :auto-upload="false"
     >
+
       <el-icon class="el-icon--upload"><upload-filled /></el-icon>
       <div class="el-upload__text">
-        Drop file here or <em>click to upload</em>
+        推动文件或 <em>点击上传</em>
       </div>
-      <template #tip>
-        <div class="el-upload__tip">
-          jpg/png files with a size less than 500kb
-        </div>
-      </template>
+<!--      <template #tip>-->
+<!--        <div class="el-upload__tip">-->
+<!--          jpg/png files with a size less than 500kb-->
+<!--        </div>-->
+<!--      </template>-->
     </el-upload>
   </div>
-<el-button @click="exportWord">导出</el-button>
-
+<div style="justify-content: center;align-items: center">
+  <el-input v-model="data.title" style="width:200px"></el-input>
+  <el-button @click="exportWord" style="margin: 40px 0">导出</el-button>
+  <el-button @click="clearText" style="margin: 40px 0">清空</el-button>
+</div>
   <div ref="word" style="width:0;height:0"></div>
-  <el-input type="textarea" v-model="data.docVal"></el-input>
-
+  <el-input type="textarea" v-model="data.docVal" style="width: 1000px;"></el-input>
+  <span>{{data.len}}</span>
 </template>
 
 <script setup>
 import Docxtemplater from "docxtemplater";
 import PizZip from "pizzip";
+import { UploadFilled } from '@element-plus/icons-vue'
 import JSZipUtils from "jszip-utils";
 import { saveAs } from "file-saver";
-import {computed, getCurrentInstance, reactive, watch} from "vue";
+import {computed, getCurrentInstance, onMounted, reactive, watch} from "vue";
 const docx = require("docx-preview");
 import axios from "axios";
 const currentInstance = getCurrentInstance()
 const data=reactive({
   title:'',
+  len:0,
   file:null,
   docVal:'',
   timeVal:new Date(),
-  rightTable:[{num1:1,symbol:'*',num2:2,result:'(2)',answer:2,isRight:'√'}],
-  errorTable:[{num1:1,symbol:'*',num2:2,result:'(2)',answer:5,isRight:'×'}],
+})
+watch(()=>data.docVal,(val)=>{
+  if (val) {
+    data.len = val.length
+    sessionStorage.setItem('text', data.docVal)
+  }
+})
+onMounted(()=>{
+  data.docVal = sessionStorage.getItem('text')
 })
 const onbeforeunload = (file,files) => {
    data.title = file.name.split('.')[0]
   const blob = new Blob([file.raw],{type:'application/vnd.openxmlformats-officedocument.wordprocessingml.document'});
-
-
-
   const reader = new FileReader();
   reader.addEventListener('loadend', function (e) {
-    // 输出字符串 {hello: world}
     data.docVal = e.target.result
-    // console.log(e.target.result)
   })
   reader.readAsText(blob,'utf-8')
 
@@ -74,9 +83,8 @@ const getFile = () => {
         });
       })
 }
-const fileChange = (e) => {
-  // console.log(e)
-  getFile()
+const clearText = () => {
+
 }
 // 打印文档处理
 const exportWord=()=> {
@@ -130,6 +138,8 @@ const exportWord=()=> {
 
 </script>
 
-<style scoped>
-
+<style >
+textarea{
+  min-height: 400px;
+}
 </style>
