@@ -15,10 +15,18 @@ import {ref} from "vue";
 import WjhTable from "@/view/mobile/common/wjhTable";
 
 import WjhTableCol from "@/view/mobile/common/wjhTableCol";
-const title = ref(['开始时间','结束时间','主题'])
+const title = ref(['开始时间1','结束时间1','主题1'])
 const data = ref([{start:'2022-09-09',end:'2022-09-09',topic:'抗日战争1'},{start:'2022-09-09',end:'2022-09-19',topic:'抗日战争2'},{start:'2022-09-09',end:'2022-09-29',topic:'抗日战争3'},])
 </script>
 
 <style lang="scss" scoped>
+//:deep{
+//  .btbg{
+//    background-color: red !important;
+//  }
+//  .tabtop13 td{
+//    color: #00FFFF !important;
+//  }
+//}
 
 </style>

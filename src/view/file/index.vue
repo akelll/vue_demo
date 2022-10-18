@@ -24,10 +24,14 @@
   <el-input v-model="data.title" style="width:200px"></el-input>
   <el-button @click="exportWord" style="margin: 40px 0">导出</el-button>
   <el-button @click="clearText" style="margin: 40px 0">清空</el-button>
+  <el-button @click="showDialog" style="margin: 40px 0">显示/隐藏</el-button>
 </div>
   <div ref="word" style="width:0;height:0"></div>
   <el-input type="textarea" v-model="data.docVal" style="width: 1000px;"></el-input>
   <span>{{data.len}}</span>
+
+  <window :dialogVisible="dialogVisible"/>
+
 </template>
 
 <script setup>
@@ -36,9 +40,12 @@ import PizZip from "pizzip";
 import { UploadFilled } from '@element-plus/icons-vue'
 import JSZipUtils from "jszip-utils";
 import { saveAs } from "file-saver";
-import {computed, getCurrentInstance, onMounted, reactive, watch} from "vue";
+import {computed, getCurrentInstance, onMounted, reactive, ref, watch} from "vue";
 const docx = require("docx-preview");
 import axios from "axios";
+import Window from "@/view/file/conom/window";
+
+const dialogVisible = ref(false)
 const currentInstance = getCurrentInstance()
 const data=reactive({
   title:'',
@@ -49,12 +56,13 @@ const data=reactive({
 })
 watch(()=>data.docVal,(val)=>{
   if (val) {
-    data.len = val.length
-    sessionStorage.setItem('text', data.docVal)
+    data.len = val.trim().length
+    localStorage.setItem('text', data.docVal)
   }
 })
 onMounted(()=>{
-  data.docVal = sessionStorage.getItem('text')
+  data.docVal = localStorage.getItem('text')
+
 })
 const onbeforeunload = (file,files) => {
    data.title = file.name.split('.')[0]
@@ -65,9 +73,10 @@ const onbeforeunload = (file,files) => {
   })
   reader.readAsText(blob,'utf-8')
 
-  // docx.renderAsync(blob, currentInstance.ctx.$refs.word).then(res=>{
-  //   console.log(res)
-  // });
+}
+const showDialog = () => {
+  dialogVisible.value = !dialogVisible.value
+
 }
 const getFile = () => {
   axios

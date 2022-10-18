@@ -7,6 +7,7 @@ module.exports = defineConfig({
   filenameHashing:true,
   transpileDependencies: true,
   devServer:{
+    port:8888,
     proxy:{
       '/api':{
         // target:'http://192.168.1.101/jbxx_jsc',

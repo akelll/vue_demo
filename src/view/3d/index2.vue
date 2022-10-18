@@ -128,7 +128,7 @@ html{
 }
 /*定义小正方体样式*/
 .cube span{
-  display: bloack;
+  display: block;
   width: 100px;
   height: 100px;
   position: absolute;
