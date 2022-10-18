@@ -1,6 +1,7 @@
 
 import {createRouter, createWebHashHistory, createWebHistory} from 'vue-router'
 import {routerStack} from "@/stack";
+import {test} from "@/common/straight"
 
 const routes = [
     {path:'/',component:()=>import('@/view/home.vue')},
@@ -27,8 +28,19 @@ const router = createRouter({
     history:createWebHashHistory(),
     routes,
 });
+let start = Date.now();
+let standing = 0;  //停留时间
+let current = 0;
 router.beforeEach((to,form,next)=>{
     routerStack.stack_push({form:to.path,fullPath:to.fullPath})
+    if (to) {
+        current = Date.now();
+        standing = parseInt(current - start) / 1000;
+        start = Date.now();
+
+        test.set_Page_duration(standing)
+        console.log(test.get_data());
+    }
     next()
 })
 export default  router

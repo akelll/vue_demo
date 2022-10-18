@@ -67,18 +67,19 @@
 </template>
 
 <script setup >
-import {defineAsyncComponent, reactive, ref} from "vue";
+import {defineAsyncComponent, onMounted, reactive, ref} from "vue";
 import {add, delById, getDataByKey, queryAllData, queryDataByIndex, updateByKey} from "@/sql";
 import {ElMessage, ElMessageBox, ElButton, ElTable} from "element-plus";
 import {useRouter} from "vue-router/dist/vue-router";
 import {routerStack} from "@/stack";
+import {test} from "@/common/straight";
   const filters = reactive({
     capitalize:(value)=>{
       if(!value) return '暂无数据'
       value = '处理结果为:'+value
     }
   })
-  const test = ref('')
+
   const title = ref('添加')
   const router = useRouter()
   const dialogFormVisible = ref(false)
@@ -157,6 +158,24 @@ import {routerStack} from "@/stack";
     })
 
   }
+  onMounted(()=>{
+    const performance = window.performance.timing;
+    // console.log(performance)
+
+    getTime(performance)
+  })
+const getTime=(t)=> {
+
+  const t2 = t.loadEventStart  -  t.fetchStart //页面加载时间
+  const t0 =  t.domainLookupEnd -
+      t.domainLookupStart +
+      t.connectEnd -
+      t.connectStart +
+      t.responseEnd -
+      t.responseStart;
+  test.set_t2(t2)
+  test.set_t0(t0)
+}
 </script>
 
 <style scoped lang="scss">

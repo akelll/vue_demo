@@ -7,7 +7,8 @@ import vue3dLoader from "vue-3d-loader";
 import dataV from '@jiaminghi/data-view'
 
 import vueSeamlessScroll from 'vue-seamless-scroll/src';
-
+import Vconsole from 'vconsole';
+const vConsole = new Vconsole();
 
 
 const app = createApp(App)
