@@ -1,8 +1,8 @@
+let db; //数据库对象
+let name = 'test'; //数据库名
+let tableName = 'user';  //表名
+let version = 1; //数据库版本
 
-
-var db //数据库对象
-var name='test',tableName='user'
-var version = 1
 function setInfo(n,t,v) {
     name = n
     tableName = t
@@ -122,10 +122,10 @@ function queryDataByIndex(index,val) {  //index 为索引名 val查找值 单条
 
 }
 function getMultipleData(val) {
-    var store = returnStore()
-    var request = store.openCursor(null, IDBCursor.prev);
+    const store = returnStore();
+    const request = store.openCursor(null, IDBCursor.prev);
     request.onsuccess = function (e) {
-        var cursor = e.target.result;
+        const cursor = e.target.result;
         if (cursor) {
             var student = cursor.value;
             console.log(student);
@@ -134,9 +134,9 @@ function getMultipleData(val) {
     }
 }
 function delById(id) {
-    var store = returnStore()
+    const store = returnStore();
     // 删除请求
-    var delPersonRequest = store.delete(id);
+    const delPersonRequest = store.delete(id);
     return new Promise((resolve ,reject)=>{
         delPersonRequest.onsuccess = function (e) {
             resolve(true)

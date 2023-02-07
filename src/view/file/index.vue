@@ -22,13 +22,19 @@
   </div>
 <div style="justify-content: center;align-items: center">
   <el-input v-model="data.title" style="width:200px"></el-input>
-  <el-button @click="exportWord" style="margin: 40px 0">导出</el-button>
+  <el-button @click="exportWord" style="margin: 40px 0">导出word</el-button>
+  <el-button @click="downloadTxt" style="margin: 40px 0">导出txt</el-button>
+  <el-button @click="getPdf('name')" style="margin: 40px 0">导出pdf</el-button>
   <el-button @click="clearText" style="margin: 40px 0">清空</el-button>
   <el-button @click="showDialog" style="margin: 40px 0">显示/隐藏</el-button>
 </div>
   <div ref="word" style="width:0;height:0"></div>
-  <el-input type="textarea" v-model="data.docVal" style="width: 1000px;"></el-input>
-  <span>{{data.len}}</span>
+  <div id="pdfDom">
+    <el-input type="textarea"  v-model="data.docVal" style="width: 1000px;"></el-input>
+    <span>{{data.len}}</span>
+  </div>
+
+
 
   <window :dialogVisible="dialogVisible"/>
 
@@ -36,27 +42,41 @@
 
 <script setup>
 import Docxtemplater from "docxtemplater";
+
+
 import PizZip from "pizzip";
 import { UploadFilled } from '@element-plus/icons-vue'
 import JSZipUtils from "jszip-utils";
 import { saveAs } from "file-saver";
-import {computed, getCurrentInstance, onMounted, reactive, ref, watch} from "vue";
+import {getCurrentInstance, onMounted, reactive, ref, watch} from "vue";
 const docx = require("docx-preview");
 import axios from "axios";
 import Window from "@/view/file/conom/window";
+import {getPdf} from "@/common/htmlToPdf";
 
 const dialogVisible = ref(false)
 const currentInstance = getCurrentInstance()
+window.addEventListener("mouseup",(e)=>{
+  let result = window.getSelection().toString()
+  console.log(result)
+})
 const data=reactive({
   title:'',
   len:0,
   file:null,
   docVal:'',
   timeVal:new Date(),
+  downloadType:"text/plain;charset=utf-8"
 })
 watch(()=>data.docVal,(val)=>{
   if (val) {
-    data.len = val.trim().length
+    let string = val
+    // console.log(string.length)
+    string = string.replace(/\r\n/g,"")
+    string = string.replace(/\n/g,"");
+    string = string.replace(/\s/g,"");
+    console.log(string.length)
+    data.len = string.length
     localStorage.setItem('text', data.docVal)
   }
 })
@@ -66,17 +86,32 @@ onMounted(()=>{
 })
 const onbeforeunload = (file,files) => {
    data.title = file.name.split('.')[0]
-  const blob = new Blob([file.raw],{type:'application/vnd.openxmlformats-officedocument.wordprocessingml.document'});
-  const reader = new FileReader();
-  reader.addEventListener('loadend', function (e) {
-    data.docVal = e.target.result
-  })
-  reader.readAsText(blob,'utf-8')
+    const type = file.name.split('.')[1]
+  if (type==='txt')
+  {
+    const blob = new Blob([file.raw], {type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'});
+    const reader = new FileReader();
+    reader.addEventListener('loadend', function (e) {
+      data.docVal = e.target.result
+    })
+    reader.readAsText(blob, 'utf-8')
+  }else if (type==='doc'||type==='docx'){
+    // const admZip = require('adm-zip')
+    // const zip = new admZip()
+    // zip.extractAllTo("./result", /*overwrite*/true);
+    // const contentXml = zip.readAsText('word/document.xml')
+    // console.log(contentXml)
+  }
 
 }
 const showDialog = () => {
   dialogVisible.value = !dialogVisible.value
 
+}
+const downloadTxt = () => {
+  let str = data.docVal
+  let strData = new Blob([str], { type: 'text/plain;charset=utf-8' });
+  saveAs(strData, data.title+".txt");
 }
 const getFile = () => {
   axios

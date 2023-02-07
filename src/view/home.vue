@@ -27,6 +27,8 @@
       </div>
       <div>
         <router-link to="/3ds3">3d效果3</router-link>
+      </div><div>
+        <router-link to="/3ds4">3d效果4</router-link>
       </div>
       <div>
         <router-link to="/mobileTable">移动端表格</router-link>
@@ -48,6 +50,8 @@
       </div>
       <div>
         <router-link to="/screen">认领大屏</router-link>
+      </div><div>
+        <router-link to="/dragEvent">拖拽</router-link>
       </div>
     </div>
 

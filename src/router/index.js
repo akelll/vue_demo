@@ -14,6 +14,7 @@ const routes = [
     {path:'/3ds',component:()=>import('@/view/3d/index.vue')},
     {path:'/3ds2',component:()=>import('@/view/3d/index2.vue')},
     {path:'/3ds3',component:()=>import('@/view/3d/index3.vue')},
+    {path:'/3ds4',component:()=>import('@/view/3d/index4.vue')},
     {path:'/index',component:()=>import('@/view/index.vue')},
     {path:'/page1',component:()=>import('@/view/page/page1.vue')},
     {path:'/page2',component:()=>import('@/view/page/page2.vue')},
@@ -21,7 +22,11 @@ const routes = [
     {path:'/mobileTable',component:()=>import('@/view/mobile/index.vue')},
     {path:'/mobileTable2',component:()=>import('@/view/mobile/index2.vue')},
     {path:'/file',component:()=>import('@/view/file/index.vue')},
+    {path:'/img',component:()=>import('@/view/file/ImageRoute.vue')},
+    {path:'/imgs',component:()=>import('@/view/file/imgClip.vue')},
+    {path:'/files',component:()=>import('@/view/file/conom/preview.vue')},
     {path:'/qrcode',component:()=>import('@/view/file/qrcode.vue')},
+    {path:'/dragEvent',component:()=>import('@/view/drag/index.vue')},
 ]
 
 const router = createRouter({
